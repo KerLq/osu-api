@@ -76,6 +76,7 @@ Now we have to implement the oauth callback method to exchange our authorization
 Now we're done implementing the OAuthController but a user has to be created.
 
 Navigate to your User Model
+
     class User < ApplicationRecord
     
         def self.create_from_oauth(params)
@@ -95,6 +96,7 @@ Go into your routes.rb
     end
 
 Our final step is to add the following code into your ApplicationController
+
     class ApplicationController < ActionController::Base
     
         @@osuApi = nil
