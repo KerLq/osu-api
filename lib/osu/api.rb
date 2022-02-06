@@ -50,36 +50,76 @@ module Osu
       end
 
       ## TO DO ##
-      def getUserKudosu(*args) # required: user_id
-                               # optional: limit, offset
-        @@token.get("api/v2/users/#{user_id}/kudosu")
-      end
-      ## TO DO ##
-      def getUserScores(*args) # required: user_id, type (best, firsts, recent)
-                               # optional: include_fails, mode, limit, offset
-        case args.size
-          when 1
-          @@token.get("api/v2/users/#{@@user_id}/scores/#{args[0]}")
-          when 2
-          @@token.get("api/v2/users/#{args[0]}/scores/#{args[1]}")
+      def getUserKudosu(user_id, options) # required: user_id
+                                          # optional: limit, offset
+        if !options
+          @@token.get("api/v2/users/#{user_id}/kudosu")
+        elsif options[:limit] && !options[:offset]
+          @@token.get("api/v2/users/#{user_id}/kudosu?limit=#{options[:limit]}")
+        elsif !options[:limit] && options[:offset]
+          @@token.get("api/v2/users/#{user_id}/kudosu?offset=#{options[:offset]}")
+        elsif options[:limit] && options[:offset]
+          @@token.get("api/v2/users/#{user_id}/kudosu?limit=#{options[:limit]}&offset=#{options[:offset]}")
         end
       end
-      def getUserBeatmaps(*args) # required: user_id, type
-                                 # optional: limit, offset
-        @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}")
+      ## TO DO ##
+      def getUserScores(user_id, type, options) # required: user_id, type (best, firsts, recent)
+                                                # optional: include_fails, mode, limit, offset
+        if options[:include_fails] && !options[:mode] && !options[:limit] && !options[:offset]
+        elsif options[:include_fails] && options[:mode] && !options[:limit] && !options[:offset]
+        elsif options[:include_fails] && options[:mode] && options[:limit] && !options[:offset]
+        elsif options[:include_fails] && options[:mode] && options[:limit] && options[:offset]
+        
+        elsif !options[:include_fails] && options[:mode] && !options[:limit] && !options[:offset]
+        elsif !options[:include_fails] && options[:mode] && options[:limit] && !options[:offset]
+        elsif !options[:include_fails] && options[:mode] && !options[:limit] && options[:offset]
+        elsif !options[:include_fails] && options[:mode] && !options[:limit] && !options[:offset]
+
+        elsif !options[:include_fails] && !options[:mode] && options[:limit] && !options[:offset]
+        elsif !options[:include_fails] && !options[:mode] && options[:limit] && options[:offset]
+        elsif options[:include_fails] && !options[:mode] && !options[:limit] && options[:offset]
+        elsif !options[:include_fails] && options[:mode] && !options[:limit] && !options[:offset]
+          # FINISH OMG WAT IS DAT
+        end
+      end
+      def getUserBeatmaps(user_id, type, options) # required: user_id, type
+                                                  # optional: limit, offset
+        if user_id && type && !options
+          @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}")
+        elsif options[:limit] && !options[:offset]
+          @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}?limit=#{options[:limit]}")
+        elsif options[:offset] && !options[:limit]
+          @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}?offset=#{options[:limit]}")
+        elsif options[:limit] && options[:offset]
+          @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}?limit=#{options[:limit]}&offset=#{options[:offset]}")
+        end
       end
       ## TO DO ##
-      def getUserRecentActivities(*args) # required: user_id
-                                         # optional: limit, offset
-        @@token.get("api/v2/users/#{user_id}/recent_activities")
+      def getUserRecentActivities(user_id, options)  # required: user_id
+                                            # optional: limit, offset
+        if user_id && !options
+          @@token.get("api/v2/users/#{user_id}/recent_activities")          
+        elsif options[:limit] && !options[:offset]
+          @@token.get("api/v2/users/#{user_id}/recent_activities?limit=#{options[:limit]}")
+        elsif options[:offset] && !options[:limit]
+          @@token.get("api/v2/users/#{user_id}/recent_activities?offset=#{options[:offset]}")
+        elsif options[:limit] && options[:offset]
+          @@token.get("api/v2/users/#{user_id}/recent_activities?limit=#{options[:limit]}&offset=#{options[:offset]}")
+        end
+        
       end
       ## TO DO ##
 
-      def getUser(*args) # required: user_id, mode
-                         # optional: key 
-        @@token.get("api/v2/users/#{user_id}/#{mode}")
+      def getUser(*args)  # required: user_id, mode
+                          # optional: key
+        case args.size
+          when 2
+            @@token.get("api/v2/users/#{args[0]}/#{args[1]}")
+          when 3
+            @@token.get("api/v2/users/#{args[0]}/#{args[1]}?key=#{args[2]}")
+        end
       end
-      
+
       def getUserId
         @@user_id
       end
@@ -89,17 +129,22 @@ module Osu
       ################################
 
       ## TO DO ##
-      def lookupBeatmap(*args) # optional (one of them is required): checksum, filename, id
+      def lookupBeatmap(optional) # optional (one of them is required): checksum, filename, id
+        if optional[:checksum] && !optional[:filename] && !optional[:id]
+        end
         @@token.get("api/v2/beatmaps/lookup")
       end
       ## TO DO ##
-      def getUserBeatmapScore(*args) # required: beatmap_id, user_id
-                                     # optional: mode, mods
-        case args.size
-          when 1
-            @@token.get("api/v2/beatmaps/#{args[0]}/scores/users/#{@@user_id}").parsed
-          when 2
-            @@token.get("api/v2/beatmaps/#{args[0]}/scores/users/#{args[1]}").parsed
+      def getUserBeatmapScore(beatmap_id, user_id, options) # required: beatmap_id, user_id
+                                                            # optional: mode, mods
+        if !options
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}").parsed
+        elsif options[:mode] && !options[:mods]
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{options[:mode]}").parsed
+        elsif !options[:mode] && options[:mods]
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mods[]=#{options[:mods]}").parsed
+        elsif options[:mode] && options[:mods]
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{options[:mode]}&mods[]=#{options[:mods]}").parsed
         end
       end
       ## TO DO ##
@@ -116,7 +161,7 @@ module Osu
         end
         debugger
       end
-      ## TO DO ##
+
       def getBeatmap(beatmap_id) # https://osu.ppy.sh/beatmapsets/39804#osu/129891  (129891 gonna be the ID cuz its a beatmapset)
         @@token.get("api/v2/beatmaps/#{beatmap_id}").parsed
       end
@@ -131,11 +176,8 @@ module Osu
       end
       
 
-      def getRanking(*args) # mode and type
-        case args.size
-          when 2
-            @@token.get("api/v2/rankings/#{args[0]}/#{args[1]}")
-        end
+      def getRanking(mode, type)
+        @@token.get("api/v2/rankings/#{mode}/#{type}")
       end
 
 
