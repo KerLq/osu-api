@@ -1,8 +1,12 @@
 # Osu::Api
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/osu/api`. To experiment with that code, run `bin/console` for an interactive prompt.
+Hello! This gem is capable of creating an oauth login via osu! and using the current apiv2 requests. 
 
-TODO: Delete this and the text above, and describe your gem
+## Example:
+
+You can login using your osu account. 
+After that you can make requests on behalf the user.
+Ex: getBeatmaps, getUserScore, getForumpost and more!
 
 ## Installation
 
@@ -21,7 +25,20 @@ Or install it yourself as:
     $ gem install osu-api
 
 ## Usage
+First of all you have to implement in either your Frontend or ApplicationController the following lines to do requests in any controller
 
+    class ApplicationController < ActionController::Base
+    
+        @@osuApi = nil
+
+    def setOsuApi(oauth)
+        @@osuApi = oauth 
+    end
+
+    def osuApi
+        @@osuApi
+    end
+    
 TODO: Write usage instructions here
 
 ## Development
