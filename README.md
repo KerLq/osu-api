@@ -50,7 +50,7 @@ Navigate into your OAuthController and implement a initialize method to create t
     class OAuthController < ApplicationController
         def initialize
 
-            @osuApi = Osu::Oauth::OsuOauth.new(
+            @osuApi = Osu::Api::OAuth.new(
               Rails.configuration.x.oauth.client_id,
               Rails.configuration.x.oauth.client_secret,
               Rails.configuration.x.oauth.redirect_uri
