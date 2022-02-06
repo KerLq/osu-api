@@ -108,7 +108,6 @@ module Osu
         end
         
       end
-      ## TO DO ##
 
       def getUser(*args)  # required: user_id, mode
                           # optional: key
@@ -128,7 +127,6 @@ module Osu
       ####### Beatmap Requests #######
       ################################
 
-      ## TO DO ##
       def lookupBeatmap(optional) # optional (one of them is required): checksum, filename, id
         if optional[:checksum] && !optional[:filename] && !optional[:id]
         end
