@@ -267,7 +267,7 @@ module Osu
       def search(mode: all, query: nil, page: nil) # mode: all, user or wiki_page
         @@token.get("api/v2/search?mode#{mode}&query=#{query}&page=#{page}").parsed
       end
-      def getMostRecentMatches(limit: "") # 50 latest created matches
+      def getMostRecentMatches(limit: 50) # 50 latest created matches
         @@token.get("api/v2/matches?limit=#{limit}")
       end
 
