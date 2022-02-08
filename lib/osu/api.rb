@@ -66,7 +66,7 @@ module Osu
       # end
 
       def getUserKudosu(user_id, limit: nil, offset: nil)
-        @@token.get("api/v2/users/#{user_id}/kudosu?limit=#{limit}&offset=#{offset}")
+        @@token.get("api/v2/users/#{user_id}/kudosu?limit=#{limit}&offset=#{offset}").parsed
 
       end
       ## TO DO ##
@@ -125,7 +125,7 @@ module Osu
       # end
     
       def getUserBeatmaps(user_id, type, limit: nil, offset: nil)
-        @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}?limit=#{limit}&offset=#{offset}")
+        @@token.get("api/v2/users/#{user_id}/beatmapsets/#{type}?limit=#{limit}&offset=#{offset}").parsed
       end
       ## TO DO ##
       # def getUserRecentActivity(user_id, options = {})  # required: user_id
@@ -181,7 +181,7 @@ module Osu
       # end
 
       def lookupBeatmap(checksum: nil, filename: nil, id: nil)
-        @@token.get("api/v2/beatmaps/lookup?checksum=#{checksum}&filename=#{filename}&id=#{id}")
+        @@token.get("api/v2/beatmaps/lookup?checksum=#{checksum}&filename=#{filename}&id=#{id}").parsed
 
       end
       ## TO DO ##
@@ -199,11 +199,11 @@ module Osu
       # end
       def getUserBeatmapScore(beatmap_id, user_id, mode: nil, mods: nil)
         if mods.present? && @@is_supporter
-          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}&mods[]=#{mods}")
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}&mods[]=#{mods}").parsed
         elsif mods.present? && !@@is_supporter
           raise "You can't specifiy mods since you do not have osu!supporter"
         else
-          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}")
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}").prased
         end
       end
       ## TO DO ##
@@ -232,15 +232,15 @@ module Osu
 
       #   @@token.get("api/v2/beatmaps/#{beatmap_id}/scores")
       # end
+      ## WIP
       def getBeatmapScores(beatmap_id, mode: nil, mods: nil, type: nil)
-        if mods.present? && @@is_supporter
-          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores?mode=#{mode}&type=#{type}&mods[]=#{mods}")
-        elsif mods.present? && !@@is_supporter
+        if mods.present? && !@@is_supporter
           raise "You can't specifiy mods since you do not have osu!supporter"
         else
-          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores?mode=#{mode}&type=#{type}&mods[]=#{mods}")
+          @@token.get("api/v2/beatmaps/#{beatmap_id}/scores?mode=#{mode}&type=#{type}&mods[]=#{mods}").parsed
         end
       end
+
       def getBeatmaps(*beatmaps) # "api/v2/beatmaps?ids[]=12345&ids[]=45678&ids[]=8934939"
         beatmaps_query = createQuery("ids[]=", beatmaps)
         @@token.get("api/v2/beatmaps?#{beatmaps_query}").parsed
@@ -251,8 +251,8 @@ module Osu
       end
 
 
-      def getForumpost(forumpost_id, cursor_string: nil, sort: nil, limit: nil, start: nil, end: nil)
-        @@token.get("api/v2/forums/topics/#{forumpost_id}?cursor_string=#{cursor_string}&sort=#{sort}&limit=#{limit}&start=#{start}&end=#{end}").parsed
+      def getForumpost(forumpost_id, cursor_string: nil, sort: nil, limit: nil, start: nil, ending: nil)
+        @@token.get("api/v2/forums/topics/#{forumpost_id}?cursor_string=#{cursor_string}&sort=#{sort}&limit=#{limit}&start=#{start}&end=#{ending}").parsed
       end
                                         
       def getMatch(match_id)
@@ -261,18 +261,18 @@ module Osu
       
 
       def getRanking(mode, type, country: nil, cursor: nil, filter: all, spotlight: nil, variant: nil)
-        @@token.get("api/v2/rankings/#{mode}/#{type}?country=#{country}&cursor=#{cursor}&filter=#{filter}&spotlight=#{spotlight}&variant=#{variant}")
+        @@token.get("api/v2/rankings/#{mode}/#{type}?country=#{country}&cursor=#{cursor}&filter=#{filter}&spotlight=#{spotlight}&variant=#{variant}").parsed
       end
 
       def search(mode: all, query: nil, page: nil) # mode: all, user or wiki_page
         @@token.get("api/v2/search?mode#{mode}&query=#{query}&page=#{page}").parsed
       end
       def getMostRecentMatches(limit: 50) # 50 latest created matches
-        @@token.get("api/v2/matches?limit=#{limit}")
+        @@token.get("api/v2/matches?limit=#{limit}").parsed
       end
 
       def getSpotlights
-        @@token.get("api/v2/spotlights")
+        @@token.get("api/v2/spotlights").parsed
       end
 
       def getBeatmapsetsEvents
