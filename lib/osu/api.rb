@@ -2,10 +2,35 @@
 
 require_relative "api/version"
 require 'oauth2'
+require 'httparty'
 
 module Osu
   module Api
     class Error < StandardError; end
+    class Api
+      API_URI = "https://osu.ppy.sh/"
+
+      def self.getUser(access_token, user_id, mode: "osu", key: nil)  # required: user_id
+        #@@token.get("api/v2/users/#{user_id}/#{mode}?key=#{key}").parsed
+        url = "#{API_URI}api/v2/users/#{user_id}/#{mode}?key=#{key}"
+        api = Api.new
+        
+        api.apiRequest(url, access_token)
+      end
+
+      def apiRequest(url, access_token)
+        headers = {
+            "Content-Type" => "application/json",
+            "Accept" => "application/json",
+            "Authorization" => "Bearer #{access_token}"
+        }
+        response = HTTParty.get(url,
+            headers: headers
+        )
+        response.parsed_response
+      end
+
+    end
     class OAuth < OAuth2::Client
       #mods = ["HD"]
       @@token = nil
