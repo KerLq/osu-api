@@ -39,7 +39,7 @@ module Osu
         get("api/v2/users/#{user_id}/recent_activity?limit=#{limit}&offset=#{offset}")
       end
 
-      def getUser(user_id, mode: osu, key: nil)  # required: user_id
+      def getUser(user_id, mode: 'osu', key: nil)  # required: user_id
           get("api/v2/users/#{user_id}/#{mode}?key=#{key}")
       end
 
