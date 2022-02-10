@@ -8,14 +8,14 @@ module Osu
   module Api
     class Error < StandardError; end
     class Api
-      API_URI = "https://osu.ppy.sh/"
+      API_URI = 'https://osu.ppy.sh/'
       @@access_token = nil
       
-      def initialize(session_token) 
+      def initialize(session_token)
         @@access_token = session_token
       end
 
-      def getUser(user_id, mode: "osu", key: nil)  # required: user_id
+      def getUser(user_id, mode: 'osu', key: nil)  # required: user_id
         get("api/v2/users/#{user_id}/#{mode}?key=#{key}")
       end
      
@@ -47,26 +47,24 @@ module Osu
         get("api/v2/beatmaps/lookup?checksum=#{checksum}&filename=#{filename}&id=#{id}")
       end
 
-      def getUserBeatmapScore(beatmap_id, user_id, mode: nil, mods: nil)
-        if mods.present? && @@is_supporter
+      def getUserBeatmapScore(beatmap_id, user_id, mode: nil, mods: nil) # mods only possible if the user has osu!supporter
+        if mods.present?
           get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}&mods[]=#{mods}")
-        elsif mods.present? && !@@is_supporter
-          raise "You can't specifiy mods since you do not have osu!supporter"
         else
           get("api/v2/beatmaps/#{beatmap_id}/scores/users/#{user_id}?mode=#{mode}")
         end
       end
 
-      def getBeatmapScores(beatmap_id, mode: nil, mods: nil, type: nil)
-        if mods.present? && !@@is_supporter
-          raise "You can't specifiy mods since you do not have osu!supporter"
-        else
+      def getBeatmapScores(beatmap_id, mode: nil, mods: nil, type: nil) # mods only possible if the user has osu!supporter
+        if mods.present?
           get("api/v2/beatmaps/#{beatmap_id}/scores?mode=#{mode}&type=#{type}&mods[]=#{mods}")
+        else
+          get("api/v2/beatmaps/#{beatmap_id}/scores?mode=#{mode}&type=#{type}")
         end
       end
 
       def getBeatmaps(*beatmaps) # "api/v2/beatmaps?ids[]=12345&ids[]=45678&ids[]=8934939"
-        beatmaps_query = createQuery("ids[]=", beatmaps)
+        beatmaps_query = createQuery('ids[]=', beatmaps)
         get("api/v2/beatmaps?#{beatmaps_query}")
       end
 
@@ -127,16 +125,13 @@ module Osu
 
     end
     class OAuth < OAuth2::Client
-      #mods = ["HD"]
       @@token = nil
-      @@user_id = nil
-      @@is_supporter = false
 
       @@authorize_url = '/oauth/authorize' # ?scope=public set by default in initialize
       @@idp_url='https://osu.ppy.sh/'
       @@token_url='/oauth/token'
 
-      def initialize(client_id, client_secret, redirect_uri, scope='public')
+      def initialize(client_id, client_secret, redirect_uri, scope: 'identify') # Scopes => https://osu.ppy.sh/docs/index.html#scopes
         super(client_id,
           client_secret, 
           authorize_url: "#{@@authorize_url}?scope=#{scope}", 
@@ -149,9 +144,12 @@ module Osu
       def getAccessToken
         @@token.to_hash[:access_token]
       end
-      
-      def getOwnData(mode='osu') # mania, taiko, fruits (yes, ctb is called fruits)
+
+      def setToken(code)
         @@token = self.auth_code.get_token(code)
+      end
+
+      def getOwnData(mode = 'osu') # mania, taiko, fruits (yes, ctb is called fruits)
         data = @@token.get("api/v2/me/#{mode}").parsed
         data
       end
