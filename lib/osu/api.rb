@@ -39,10 +39,6 @@ module Osu
         get("api/v2/users/#{user_id}/recent_activity?limit=#{limit}&offset=#{offset}")
       end
 
-      def getUser(user_id, mode: 'osu', key: nil)  # required: user_id
-          get("api/v2/users/#{user_id}/#{mode}?key=#{key}")
-      end
-
       def lookupBeatmap(checksum: nil, filename: nil, id: nil)
         get("api/v2/beatmaps/lookup?checksum=#{checksum}&filename=#{filename}&id=#{id}")
       end
@@ -103,7 +99,6 @@ module Osu
       private
       def get(uri)
         url = "#{API_URI}#{uri}"
-        debugger
         headers = {
             "Content-Type" => "application/json",
             "Accept" => "application/json",
