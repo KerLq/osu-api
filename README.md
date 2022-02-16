@@ -94,7 +94,7 @@ Good job! The user gets created after login via oauth! But wait, there are no ro
 Go into your routes.rb
 
     Rails.application.routes.draw do
-        get '/oauth2-callback', to: 'oauth#oauth_callback'
+        get '/oauth2-callback', to: 'oauth#oauth_callback' # Do not forget to set the correct redirect_uri in ur osu!settings
         get '/logout', to: 'oauth#logout'
         get '/login', to: 'oauth#login'
     end
