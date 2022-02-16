@@ -38,18 +38,18 @@ Navigate into your OAuthController and implement a initialize method to create t
     class OAuthController < ApplicationController
         def initialize
 
-            @osuApi = Osu::Api::OAuth.new(
+            @@OAuthClient = Osu::Api::OAuth.new(
               Rails.configuration.x.oauth.client_id,
               Rails.configuration.x.oauth.client_secret,
-              Rails.configuration.x.oauth.redirect_uri
+              Rails.configuration.x.oauth.redirect_uri,
+              scope: 'public'                                      # Optional (Scope 'identify' is set by default)
             )
-            setOsuApi(@osuApi) ## setOsuApi is a method located in ApplicationController
         end
         
 Next implement login & logout methods
 
     def login
-        redirect_to @osuApi.auth_code.authorize_url
+        redirect_to @@OAuthClient.auth_code.authorize_url
     end
       
     def logout
@@ -63,15 +63,16 @@ Now we have to implement the oauth callback method to exchange our authorization
     def oauth_callback
     
         # Set token for osuApi to allow global use
-        osuApi.setToken(params[:code])
+        @@OAuthClient.setToken(params[:code])
 
         # Get your own data
-        player = osuApi.getPlayer
+        player = @@OAuthClient.getPlayer
 
         # Create a user with needed params
         user = User.create_from_oauth(player)
-        # Set session for user
+        # Set session for user & access token
         session[:user_id] = user.id
+        session[:access_token] = @@OAuthClient.getAccessToken
 
         redirect_to YOUR_PATH
     end
@@ -88,6 +89,7 @@ Navigate to your User Model
                 u.username = params['username']
                 u.avatar_url = params['avatar_url']
             end
+            user
         end
 Good job! The user gets created after login via oauth! But wait, there are no routes set. 
 Go into your routes.rb
@@ -104,12 +106,8 @@ Our final step is to add the following code into your ApplicationController
     
         @@osuApi = nil
 
-        def setOsuApi(oauth)
-            @@osuApi = oauth 
-        end
-
         def osuApi
-            @@osuApi
+            @@osuApi ||= Osu::Api::Api.new(session[:access_token]) if session[:access_token]
         end
     end
     
