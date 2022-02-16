@@ -11,18 +11,6 @@ Ex: getBeatmaps, getUserScore, getForumpost and more!
 The majority isn't completed so I'll list the one that 100% works
 I recommend you looking into the code too
 
-Requests that generally work and **without** passing optional parameters:
-```
-getOwnData
-getUserScores
-getUserBeatmapScore
-getBeatmap
-getForumpost
-getMatch
-getRanking
-getMostRecentMatches
-getSpotlights
-```
 ## Installation
 
 Add this line to your application's Gemfile:
