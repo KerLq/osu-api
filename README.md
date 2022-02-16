@@ -8,7 +8,6 @@ You can login using your osu account.
 After that you can make requests on behalf the user.
 Ex: getBeatmaps, getUserScore, getForumpost and more!
 
-The majority isn't completed so I'll list the one that 100% works
 I recommend you looking into the code too
 
 ## Installation
