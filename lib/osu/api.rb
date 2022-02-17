@@ -122,7 +122,7 @@ module Osu
     class OAuth < OAuth2::Client
       @@token = nil
 
-      @@authorize_url = '/oauth/authorize' # ?scope=public set by default in initialize
+      @@authorize_url = '/oauth/authorize' # ?scope=identify set by default in initialize method
       @@idp_url='https://osu.ppy.sh/'
       @@token_url='/oauth/token'
 
