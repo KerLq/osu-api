@@ -8,7 +8,9 @@ You can login using your osu account.
 After that you can make requests on behalf the user.
 Ex: getBeatmaps, getUserScore, getForumpost and more!
 
-I recommend you looking into the code too
+I recommend you looking into the code too.
+
+osu!docs: https://osu.ppy.sh/docs/index.html
 
 ## Installation
 
